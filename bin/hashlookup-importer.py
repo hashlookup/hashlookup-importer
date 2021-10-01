@@ -28,6 +28,7 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]
     md5 = hashlib.md5()
     sha1 = hashlib.sha1()
     sha256 = hashlib.sha256()
+    sha512 = hashlib.sha512()
     tlshctx = tlsh.Tlsh()
     ssdeepctx = ssdeep.Hash()
     with open(fn, 'rb') as f:
@@ -39,11 +40,13 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]
             md5.update(data)
             sha1.update(data)
             sha256.update(data)
+            sha512.update(data)
             tlshctx.update(data)
             ssdeepctx.update(data)
     h.add_hash(value=md5.hexdigest().upper(), hashtype='MD5')
     h.add_hash(value=sha1.hexdigest().upper(), hashtype='SHA-1')
     h.add_hash(value=sha256.hexdigest().upper(), hashtype='SHA-256')
+    h.add_hash(value=sha512.hexdigest().upper(), hashtype='SHA-512')
     try:
         tlshctx.final()
         h.add_hash(value=tlshctx.hexdigest(), hashtype='TLSH')
