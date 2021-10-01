@@ -23,6 +23,8 @@ h = hashlookup.HashLookupInsert(update=True, source=args.source, publish=True)
 
 
 for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]:
+    if os.path.isdir(fn):
+        continue
     md5 = hashlib.md5()
     sha1 = hashlib.sha1()
     sha256 = hashlib.sha256()
