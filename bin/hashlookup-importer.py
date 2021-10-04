@@ -12,6 +12,7 @@ BUF_SIZE = 65536
 parser = argparse.ArgumentParser(description="Directory importer for hashlookup server")
 parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
 parser.add_argument("-s", "--source", help="Source name to be used as meta", default="hashlookup-import")
+parser.add_argument("-p", "--parent", help="Parent SHA-1 of the import", default=None)
 parser.add_argument("-d", "--dir", help="Directory to import")
 args = parser.parse_args()
 
@@ -53,6 +54,8 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]
     except:
         pass 
     h.add_hash(value=ssdeepctx.digest(), hashtype='SSDEEP')
+    if args.parent is not None:
+        h.add_parent(value=args.parent)
     h.add_meta(key='FileName', value=fn)
     h.add_meta(key='FileSize', value=size)
     h.insert()
