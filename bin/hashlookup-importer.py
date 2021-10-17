@@ -14,7 +14,7 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output
 parser.add_argument("-s", "--source", help="Source name to be used as meta", default="hashlookup-import")
 parser.add_argument("-p", "--parent", help="Parent SHA-1 of the import", default=None)
 parser.add_argument("-d", "--dir", help="Directory to import")
-parser.add_argument("-v", "--update", help="Update hash if it already exists. default is not to update existing hashlookup record.", action="store_true", default=False)
+parser.add_argument("-u", "--update", help="Update hash if it already exists. default is not to update existing hashlookup record.", action="store_true", default=False)
 
 args = parser.parse_args()
 
