@@ -11,11 +11,25 @@ BUF_SIZE = 65536
 
 parser = argparse.ArgumentParser(description="Directory importer for hashlookup server")
 parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
-parser.add_argument("-s", "--source", help="Source name to be used as meta", default="hashlookup-import")
+parser.add_argument(
+    "-s", "--source", help="Source name to be used as meta", default="hashlookup-import"
+)
 parser.add_argument("-p", "--parent", help="Parent SHA-1 of the import", default=None)
 parser.add_argument("-d", "--dir", help="Directory to import")
-parser.add_argument("-u", "--update", help="Update hash if it already exists. default is not to update existing hashlookup record but to delete existing records and update.", action="store_true", default=False)
-parser.add_argument("-e", "--skip-exists", action="store_true", default=False, help="Skip import of existing hashlookup record")
+parser.add_argument(
+    "-u",
+    "--update",
+    help="Update hash if it already exists. default is not to update existing hashlookup record but to delete existing records and update.",
+    action="store_true",
+    default=False,
+)
+parser.add_argument(
+    "-e",
+    "--skip-exists",
+    action="store_true",
+    default=False,
+    help="Skip import of existing hashlookup record",
+)
 
 args = parser.parse_args()
 
@@ -24,12 +38,16 @@ if not args.dir:
     sys.exit(1)
 
 if not args.update:
-    h = hashlookup.HashLookupInsert(update=False, source=args.source, skipexists=args.skip_exists, publish=True)
+    h = hashlookup.HashLookupInsert(
+        update=False, source=args.source, skipexists=args.skip_exists, publish=True
+    )
 else:
-    h = hashlookup.HashLookupInsert(update=True, source=args.source, skipexists=args.skip_exists, publish=True)
+    h = hashlookup.HashLookupInsert(
+        update=True, source=args.source, skipexists=args.skip_exists, publish=True
+    )
 
 
-for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]:
+for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
     if os.path.isdir(fn):
         continue
     md5 = hashlib.md5()
@@ -58,12 +76,11 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]
         tlshctx.final()
         h.add_hash(value=tlshctx.hexdigest(), hashtype='TLSH')
     except:
-        pass 
+        pass
     h.add_hash(value=ssdeepctx.digest(), hashtype='SSDEEP')
     if args.parent is not None:
         h.add_parent(value=args.parent)
     h.add_meta(key='FileName', value=fn)
     h.add_meta(key='FileSize', value=size)
     h.insert()
-    print (fn)
-
+    print(fn)
