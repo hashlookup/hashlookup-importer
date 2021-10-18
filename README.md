@@ -1,11 +1,11 @@
 # hashlookup-importer
 
-Directory importer for hashlookup server.
+Directory importer for a hashlookup server.
 
 # Usage
 
 ~~~
-usage: hashlookup-importer.py [-h] [-v] [-s SOURCE] [-d DIR]
+usage: hashlookup-importer.py [-h] [-v] [-s SOURCE] [-p PARENT] [-d DIR] [-u] [-e]
 
 Directory importer for hashlookup server
 
@@ -14,6 +14,11 @@ optional arguments:
   -v, --verbose         Verbose output
   -s SOURCE, --source SOURCE
                         Source name to be used as meta
+  -p PARENT, --parent PARENT
+                        Parent SHA-1 of the import
   -d DIR, --dir DIR     Directory to import
+  -u, --update          Update hash if it already exists. default is not to update existing hashlookup record
+                        but to delete existing records and update.
+  -e, --skip-exists     Skip import of existing hashlookup record
 ~~~
 
