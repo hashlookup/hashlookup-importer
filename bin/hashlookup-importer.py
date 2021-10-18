@@ -15,6 +15,7 @@ parser.add_argument("-s", "--source", help="Source name to be used as meta", def
 parser.add_argument("-p", "--parent", help="Parent SHA-1 of the import", default=None)
 parser.add_argument("-d", "--dir", help="Directory to import")
 parser.add_argument("-u", "--update", help="Update hash if it already exists. default is not to update existing hashlookup record but to delete existing records and update.", action="store_true", default=False)
+parser.add_argument("-e", "--skip-exists", action="store_true", default=False, help="Skip import of existing hashlookup record")
 
 args = parser.parse_args()
 
@@ -23,9 +24,9 @@ if not args.dir:
     sys.exit(1)
 
 if not args.update:
-    h = hashlookup.HashLookupInsert(update=False, source=args.source, publish=True)
+    h = hashlookup.HashLookupInsert(update=False, source=args.source, skipexists=args.skip_exists, publish=True)
 else:
-    h = hashlookup.HashLookupInsert(update=True, source=args.source, publish=True)
+    h = hashlookup.HashLookupInsert(update=True, source=args.source, skipexists=args.skip_exists, publish=True)
 
 
 for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0],  '*'))]:
