@@ -5,6 +5,7 @@ from glob import glob
 import os
 import tlsh
 import ssdeep
+import stat
 import hashlib
 
 BUF_SIZE = 65536
@@ -52,6 +53,17 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
         continue
     if not os.path.exists(fn):
         continue
+    fn_info = os.stat(fn)
+    mode = fn_info.st_mode
+    if stat.S_ISSOCK(mode):
+        continue
+    elif stat.S_ISCHR(mode):
+        continue
+    elif stat.S_ISBLK(mode):
+        continue
+    elif stat.S_ISFIFO(mode):
+        continue
+
     md5 = hashlib.md5()
     sha1 = hashlib.sha1()
     sha256 = hashlib.sha256()
