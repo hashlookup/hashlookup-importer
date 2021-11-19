@@ -16,6 +16,12 @@ parser.add_argument(
     "-s", "--source", help="Source name to be used as meta", default="hashlookup-import"
 )
 parser.add_argument("-p", "--parent", help="Parent SHA-1 of the import", default=None)
+parser.add_argument(
+    "--parent-meta",
+    help="Add metadata to parent, format is key,value",
+    default=None,
+    nargs='+',
+)
 parser.add_argument("-d", "--dir", help="Directory to import")
 parser.add_argument(
     "-u",
@@ -94,6 +100,10 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
     h.add_hash(value=ssdeepctx.digest(), hashtype='SSDEEP')
     if args.parent is not None:
         h.add_parent(value=args.parent)
+    if args.parent is not None and args.parent_meta is not None:
+        for pmeta in args.parent_meta:
+            k, v = pmeta.split(",")
+            h.add_parent_meta(value=args.parent, meta_key=k, meta_value=v)
     h.add_meta(key='FileName', value=fn)
     h.add_meta(key='FileSize', value=size)
     h.insert()
