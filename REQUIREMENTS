@@ -1,3 +1,4 @@
 hashlookup
 ssdeep
 python-tlsh
+git+https://github.com/dveselov/python-libmagic

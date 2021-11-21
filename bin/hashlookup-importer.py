@@ -7,11 +7,13 @@ import tlsh
 import ssdeep
 import stat
 import hashlib
+import magic
+import magic.flags
 
 BUF_SIZE = 65536
 
 parser = argparse.ArgumentParser(description="Directory importer for hashlookup server")
-parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output", default=False)
 parser.add_argument(
     "-s", "--source", help="Source name to be used as meta", default="hashlookup-import"
 )
@@ -69,7 +71,8 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
         continue
     elif stat.S_ISFIFO(mode):
         continue
-
+    magicdetect = magic.Magic()
+    mimetype = magicdetect.from_file(fn)
     md5 = hashlib.md5()
     sha1 = hashlib.sha1()
     sha256 = hashlib.sha256()
@@ -106,5 +109,8 @@ for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
             h.add_parent_meta(value=args.parent, meta_key=k, meta_value=v)
     h.add_meta(key='FileName', value=fn)
     h.add_meta(key='FileSize', value=size)
-    h.insert()
-    print(fn)
+    h.add_meta(key='mimetype', value=mimetype)
+    r = h.insert()
+    if args.verbose:
+        print(f"Importing -> {fn}")
+        print(f"Imported -> {r}")
