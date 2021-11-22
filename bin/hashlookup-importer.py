@@ -55,6 +55,9 @@ else:
         update=True, source=args.source, skipexists=args.skip_exists, publish=True
     )
 
+if args.verbose:
+    v = h.get_version()
+    print(f"hashlookup-lib version: {v}")
 
 for fn in [y for x in os.walk(args.dir) for y in glob(os.path.join(x[0], '*'))]:
     if os.path.isdir(fn):
